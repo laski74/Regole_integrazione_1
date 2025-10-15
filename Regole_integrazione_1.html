@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrali Indefiniti - Tecniche Avanzate</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        /* Stili Generali */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f4f7 0%, #d8e1e8 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #0056b3;
+            text-align: center;
+            border-bottom: 3px solid #0056b3;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #2a6496;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-left: 5px solid #2a6496;
+            padding-left: 10px;
+        }
+
+        h3 {
+            color: #4CAF50;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+
+        /* Sezione Correzione */
+        .correction-link {
+            display: block;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .correction-button {
+            background-color: #ff4500;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .correction-button:hover {
+            background-color: #e63e00;
+            transform: scale(1.03);
+        }
+
+        /* Sezioni Teoria e Esercizi */
+        .card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .formula-box {
+            background: #e8f0fe;
+            border-left: 5px solid #4CAF50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            overflow-x: auto;
+        }
+
+        .toggle-button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-button:hover {
+            background-color: #45a049;
+        }
+
+        .content-hidden {
+            display: none;
+            padding: 10px 0;
+        }
+
+        /* Esercizi e Soluzioni */
+        .exercise {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-left: 3px solid #2a6496;
+        }
+
+        .solution-box {
+            background: #f0fff0;
+            border: 1px solid #ccffcc;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            display: none;
+        }
+
+        .solution-box.show {
+            display: block;
+        }
+    </style>
+    <script>
+        // Funzione per espandere/comprimere le sezioni
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            const button = document.querySelector(`button[onclick*='${id}']`);
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                button.textContent = 'Espandi ➕';
+            } else {
+                content.style.display = 'block';
+                button.textContent = 'Comprimi ➖';
+            }
+            // Rende le formule MathJax visibili
+            MathJax.typeset();
+        }
+
+        // Funzione per mostrare le soluzioni degli esercizi
+        function showSolution(id) {
+            const solution = document.getElementById(id);
+            const button = event.target; // Ottiene il pulsante cliccato
+
+            if (solution.classList.contains('show')) {
+                solution.classList.remove('show');
+                button.textContent = 'Mostra Soluzione 💡';
+                button.style.backgroundColor = '#4CAF50';
+            } else {
+                solution.classList.add('show');
+                button.textContent = 'Nascondi Soluzione 🙈';
+                button.style.backgroundColor = '#e63e00';
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h1>🚀 Laboratorio Integrali: Livello Avanzato</h1>
+    <p>Benvenuti! Avremo 2 ore intense ma interattive. Iniziamo con la correzione dell'esercitazione e poi passiamo alle tecniche che ci permetteranno di risolvere integrali più complessi: **Integrazione di Funzioni Composte**, **Per Sostituzione** e **Per Parti**.</p>
+    <hr>
+
+    <h2>1. 🔴 Correzione Interattiva (20-30 min)</h2>
+    <p>Cliccate qui sotto per aprire la scheda di correzione dell'esercitazione sui polinomi, trigonometrici ed esponenziali.</p>
+    <div class="correction-link">
+        <a href="correzione_schede_genesis.html" target="_blank">
+            <button class="correction-button">APRI SCHEDA DI CORREZIONE GENESIS 📄</button>
+        </a>
+    </div>
+    <p style="text-align: center; font-style: italic;">(Si aprirà in una nuova finestra/scheda. Interagite con le schede ROSSA, BLU, VERDE e GIALLA per rivelare le risposte e il ragionamento.)</p>
+    <hr>
+
+    <h2>2. 📚 Tecniche di Integrazione Avanzate (30-40 min)</h2>
+
+    <div class="card">
+        <h3>2.1. Integrazione di Funzioni Composte (Forma \( \int f'(x) [f(x)]^n dx \))</h3>
+        <p>Questa è la prima tecnica "avanzata". Ci permette di integrare funzioni che assomigliano a una potenza, ma dove la <strong>base è una funzione \(f(x)\)</strong> e la <strong>derivata della base \(f'(x)\)</strong> è moltiplicata all'esterno.</p>
+
+        <button class="toggle-button" onclick="toggleContent('composte-formula')">Vedi Formula e Spiegazione ➕</button>
+        <div id="composte-formula" class="content-hidden">
+            <div class="formula-box">
+                \[
+                \int f'(x) [f(x)]^n dx = \frac{[f(x)]^{n+1}}{n+1} + C \quad (\text{per } n \neq -1)
+                \]
+            </div>
+            <p><strong>L'Idea Chiave:</strong> La parte \(f'(x)\) "completa" l'integrale, permettendo di trattare \(f(x)\) come fosse la variabile semplice \(x\). Se manca un fattore numerico \(k\) in \(f'(x)\), possiamo aggiungerlo e compensare moltiplicando per \(1/k\) fuori dall'integrale.</p>
+            <p><strong>Esempio:</strong> \( \int 2x (x^2 + 1)^3 dx \)</p>
+            <ul>
+                <li>\(f(x) = x^2 + 1\)</li>
+                <li>\(f'(x) = 2x\)</li>
+                <li>\(n = 3\)</li>
+            </ul>
+            <div class="formula-box">
+                \[
+                \int \underbrace{2x}_{f'(x)} \underbrace{(x^2 + 1)^3}_{[f(x)]^n} dx = \frac{(x^2 + 1)^{3+1}}{3+1} + C = \frac{(x^2 + 1)^4}{4} + C
+                \]
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2.2. Integrazione per Sostituzione</h3>
+        <p>Questa tecnica è essenziale quando l'integrale è troppo complesso. Sostituendo una parte della funzione con una nuova variabile \(t\), si trasforma l'integrale originale in uno più semplice.</p>
+
+        <button class="toggle-button" onclick="toggleContent('sostituzione-spiegazione')">Vedi Passaggi e Esempio ➕</button>
+        <div id="sostituzione-spiegazione" class="content-hidden">
+            <p><strong>I Passaggi:</strong></p>
+            <ol>
+                <li>**Scelta della Sostituzione:** Scegliere \(t = g(x)\) (spesso la parte "interna" o la radice).</li>
+                <li>**Calcolo del Differenziale:** Calcolare \(dt = g'(x) dx\).</li>
+                <li>**Sostituzione:** Sostituire \(x\), \(dx\) e l'intera espressione in termini di \(t\) e \(dt\).</li>
+                <li>**Integrazione:** Calcolare l'integrale rispetto a \(t\).</li>
+                <li>**Ritorno a \(x\):** Sostituire \(t\) con la funzione di \(x\) originale.</li>
+            </ol>
+            <p><strong>Esempio:</strong> \( \int x \sqrt{x^2 + 4} dx \)</p>
+            <div class="step-by-step">
+                <ol>
+                    <li>Scegliamo \(t = x^2 + 4\).</li>
+                    <li>Calcoliamo \(dt\): \(dt = 2x dx\). Da cui \(x dx = \frac{1}{2} dt\).</li>
+                    <li>Sostituiamo: \( \int \underbrace{\sqrt{x^2 + 4}}_{\sqrt{t}} \underbrace{x dx}_{\frac{1}{2} dt} = \int \sqrt{t} \cdot \frac{1}{2} dt = \frac{1}{2} \int t^{1/2} dt \).</li>
+                    <li>Integriamo: \( \frac{1}{2} \cdot \frac{t^{3/2}}{3/2} + C = \frac{1}{2} \cdot \frac{2}{3} t^{3/2} + C = \frac{1}{3} t^{3/2} + C \).</li>
+                    <li>Torniamo a \(x\): \( \frac{1}{3} (x^2 + 4)^{3/2} + C \).</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>2.3. Integrazione per Parti</h3>
+        <p>Si usa quando l'integrando è il prodotto di due funzioni che non sono in forma composta. Si basa sulla regola di derivazione del prodotto. È un processo di "scambio" che rende l'integrale più facile.</p>
+
+        <button class="toggle-button" onclick="toggleContent('parti-formula')">Vedi Formula e Strategia ➕</button>
+        <div id="parti-formula" class="content-hidden">
+            <div class="formula-box">
+                \[
+                \int f(x) g'(x) dx = f(x) g(x) - \int f'(x) g(x) dx
+                \]
+                <p>O, in notazione compatta, con \(u=f(x)\) e \(dv=g'(x)dx\):</p>
+                \[
+                \int u dv = uv - \int v du
+                \]
+            </div>
+            <p><strong>La Strategia della Scelta:</strong> La difficoltà è scegliere chi è \(f(x)\) e chi è \(g'(x)\). L'obiettivo è che \( \int f'(x) g(x) dx \) sia più facile di \( \int f(x) g'(x) dx \).</p>
+            <ul>
+                <li>Scegli come <strong>\(f(x)\) (da derivare)</strong> la funzione che si semplifica o non cambia di complessità (es. **polinomi**, **logaritmi**, **arcotangente**).</li>
+                <li>Scegli come <strong>\(g'(x)\) (da integrare)</strong> la funzione che puoi facilmente integrare (es. **esponenziali**, **seno/coseno**).</li>
+            </ul>
+            <p><strong>Esempio:</strong> \( \int x e^x dx \)</p>
+            <ul>
+                <li>Scegliamo: \(f(x) = x \Rightarrow f'(x) = 1\) (si semplifica)</li>
+                <li>Scegliamo: \(g'(x) = e^x \Rightarrow g(x) = e^x\) (facile da integrare)</li>
+            </ul>
+            <div class="formula-box">
+                \[
+                \int x e^x dx = x \cdot e^x - \int 1 \cdot e^x dx = x e^x - e^x + C = e^x(x-1) + C
+                \]
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <h2>3. 🧩 Esercizi Interattivi (50-60 min)</h2>
+
+    <div class="card">
+        <h3>Scheda A: Integrazione di Funzioni Composte ( \( \int f'(x) [f(x)]^n dx \) )</h3>
+        <p>Identifica \(f(x)\), \(f'(x)\) (e il fattore mancante!) e applica la formula.</p>
+
+        <div class="exercise">
+            <p>1. \( \int 2x(x^2 - 1)^4 dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A1')">Mostra Soluzione 💡</button>
+            <div id="sol-A1" class="solution-box">
+                \( f(x) = x^2-1 \), \( f'(x) = 2x \). <br>
+                \[ \frac{(x^2 - 1)^5}{5} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>2. \( \int x \sqrt{x^2 - 3} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A2')">Mostra Soluzione 💡</button>
+            <div id="sol-A2" class="solution-box">
+                \( f(x) = x^2 - 3 \), \( f'(x) = 2x \). Fattore mancante: 2. <br>
+                \[ \frac{1}{2} \int 2x (x^2 - 3)^{1/2} dx = \frac{1}{2} \cdot \frac{(x^2 - 3)^{3/2}}{3/2} + C = \frac{1}{3} (x^2 - 3)^{3/2} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>3. \( \int \sin(x) \cos^4(x) dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A3')">Mostra Soluzione 💡</button>
+            <div id="sol-A3" class="solution-box">
+                \( f(x) = \cos(x) \), \( f'(x) = -\sin(x) \). Fattore mancante: -1. <br>
+                \[ - \int (-\sin(x)) \cos^4(x) dx = - \frac{\cos^5(x)}{5} + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>4. \( \int \frac{4x}{x^2 + 1} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A4')">Mostra Soluzione 💡</button>
+            <div id="sol-A4" class="solution-box">
+                Forma \( \int \frac{f'(x)}{f(x)} dx = \ln|f(x)| + C \). <br>
+                \( f(x) = x^2+1 \), \( f'(x) = 2x \). \( 4x = 2 \cdot 2x \). <br>
+                \[ 2 \int \frac{2x}{x^2 + 1} dx = 2 \ln|x^2 + 1| + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>5. \( \int e^{5x} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A5')">Mostra Soluzione 💡</button>
+            <div id="sol-A5" class="solution-box">
+                \( f(x) = 5x \), \( f'(x) = 5 \). Fattore mancante: 5. <br>
+                \[ \frac{1}{5} \int 5 e^{5x} dx = \frac{1}{5} e^{5x} + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>6. \( \int \frac{\arctan(x)}{1+x^2} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A6')">Mostra Soluzione 💡</button>
+            <div id="sol-A6" class="solution-box">
+                \( f(x) = \arctan(x) \), \( f'(x) = \frac{1}{1+x^2} \). \( n=1 \). <br>
+                \[ \frac{(\arctan(x))^2}{2} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>7. \( \int (2x - 1) e^{x^2 - x} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A7')">Mostra Soluzione 💡</button>
+            <div id="sol-A7" class="solution-box">
+                \( f(x) = x^2 - x \), \( f'(x) = 2x - 1 \). <br>
+                \[ e^{x^2 - x} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>8. \( \int \frac{1}{x \ln(x)} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A8')">Mostra Soluzione 💡</button>
+            <div id="sol-A8" class="solution-box">
+                Riscrivi come \( \int \frac{1/x}{\ln(x)} dx \). Forma \( \int \frac{f'(x)}{f(x)} dx \). <br>
+                \( f(x) = \ln(x) \), \( f'(x) = 1/x \). <br>
+                \[ \ln|\ln|x|| + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>9. \( \int \frac{1}{\sqrt{1-x^2}} \arcsin^2(x) dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A9')">Mostra Soluzione 💡</button>
+            <div id="sol-A9" class="solution-box">
+                \( f(x) = \arcsin(x) \), \( f'(x) = \frac{1}{\sqrt{1-x^2}} \). \( n=2 \). <br>
+                \[ \frac{\arcsin^3(x)}{3} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>10. \( \int \frac{\sin(2x)}{1 + \cos^2(x)} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-A10')">Mostra Soluzione 💡</button>
+            <div id="sol-A10" class="solution-box">
+                \( \sin(2x) = 2 \sin(x) \cos(x) \). <br>
+                \( f(x) = 1 + \cos^2(x) \), \( f'(x) = 2 \cos(x) (-\sin(x)) = - \sin(2x) \). <br>
+                \[ - \int \frac{-\sin(2x)}{1 + \cos^2(x)} dx = - \ln|1 + \cos^2(x)| + C \]
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <h3>Scheda B: Integrazione per Sostituzione</h3>
+        <p>Trasforma l'integrale ponendo \(t = g(x)\). **Suggerimento:** Rendi l'argomento della radice o della funzione interna la tua \(t\).</p>
+
+        <div class="exercise">
+            <p>1. \( \int x \sqrt{x+1} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B1')">Mostra Soluzione 💡</button>
+            <div id="sol-B1" class="solution-box">
+                Sostituzione: \( t = x+1 \Rightarrow x = t-1 \), \( dt = dx \). <br>
+                \[ \int (t-1) \sqrt{t} dt = \int (t^{3/2} - t^{1/2}) dt = \frac{t^{5/2}}{5/2} - \frac{t^{3/2}}{3/2} + C = \frac{2}{5} (x+1)^{5/2} - \frac{2}{3} (x+1)^{3/2} + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>2. \( \int \frac{1}{x \sqrt{\ln x}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B2')">Mostra Soluzione 💡</button>
+            <div id="sol-B2" class="solution-box">
+                Sostituzione: \( t = \ln x \), \( dt = \frac{1}{x} dx \). <br>
+                \[ \int \frac{1}{\sqrt{t}} dt = \int t^{-1/2} dt = \frac{t^{1/2}}{1/2} + C = 2 \sqrt{\ln x} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>3. \( \int \frac{x^2}{\sqrt[3]{x+2}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B3')">Mostra Soluzione 💡</button>
+            <div id="sol-B3" class="solution-box">
+                Sostituzione: \( t = x+2 \Rightarrow x = t-2 \), \( dt = dx \). <br>
+                \[ \int \frac{(t-2)^2}{t^{1/3}} dt = \int \frac{t^2 - 4t + 4}{t^{1/3}} dt = \int (t^{5/3} - 4t^{2/3} + 4t^{-1/3}) dt = \dots \]
+                (Si noti che l'integrale risulta lungo ma fattibile con potenze)
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>4. \( \int e^{\sqrt{x}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B4')">Mostra Soluzione 💡</button>
+            <div id="sol-B4" class="solution-box">
+                Sostituzione: \( t = \sqrt{x} \Rightarrow x = t^2 \), \( dx = 2t dt \). <br>
+                \[ \int e^t \cdot 2t dt = 2 \int t e^t dt \]
+                (Nota: Questo integrale si risolve con <strong>Integrazione per Parti</strong>. Inserito per discussione.) <br>
+                Soluzione finale (dopo le parti): \( 2e^{\sqrt{x}}(\sqrt{x}-1) + C \)
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>5. \( \int \frac{x}{\sqrt{x^2 - 1}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B5')">Mostra Soluzione 💡</button>
+            <div id="sol-B5" class="solution-box">
+                Sostituzione: \( t = x^2 - 1 \), \( dt = 2x dx \Rightarrow x dx = \frac{1}{2} dt \). <br>
+                \[ \frac{1}{2} \int \frac{1}{\sqrt{t}} dt = \frac{1}{2} \int t^{-1/2} dt = \frac{1}{2} \cdot 2 t^{1/2} + C = \sqrt{x^2 - 1} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>6. \( \int \frac{\cos x}{\sqrt{\sin x}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B6')">Mostra Soluzione 💡</button>
+            <div id="sol-B6" class="solution-box">
+                Sostituzione: \( t = \sin x \), \( dt = \cos x dx \). <br>
+                \[ \int \frac{1}{\sqrt{t}} dt = 2 \sqrt{t} + C = 2 \sqrt{\sin x} + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>7. \( \int \frac{e^x}{e^x + 3} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B7')">Mostra Soluzione 💡</button>
+            <div id="sol-B7" class="solution-box">
+                Sostituzione: \( t = e^x + 3 \), \( dt = e^x dx \). <br>
+                \[ \int \frac{1}{t} dt = \ln|t| + C = \ln|e^x + 3| + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>8. \( \int (1-x)^3 dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B8')">Mostra Soluzione 💡</button>
+            <div id="sol-B8" class="solution-box">
+                Sostituzione: \( t = 1-x \), \( dt = -dx \Rightarrow dx = -dt \). <br>
+                \[ \int t^3 (-dt) = - \int t^3 dt = - \frac{t^4}{4} + C = - \frac{(1-x)^4}{4} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>9. \( \int \frac{\sqrt{x}}{x+1} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B9')">Mostra Soluzione 💡</button>
+            <div id="sol-B9" class="solution-box">
+                Sostituzione: \( t = \sqrt{x} \Rightarrow x = t^2 \), \( dx = 2t dt \). <br>
+                \[ \int \frac{t}{t^2 + 1} 2t dt = 2 \int \frac{t^2}{t^2 + 1} dt = 2 \int \left( 1 - \frac{1}{t^2 + 1} \right) dt = 2(t - \arctan(t)) + C = 2 \sqrt{x} - 2 \arctan(\sqrt{x}) + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>10. \( \int \frac{1}{x^2 + 4} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-B10')">Mostra Soluzione 💡</button>
+            <div id="sol-B10" class="solution-box">
+                Sostituzione (Goniometrica - non necessaria, ma utile): \( x = 2t \Rightarrow dx = 2dt \). <br>
+                \[ \int \frac{1}{4t^2 + 4} 2dt = \frac{2}{4} \int \frac{1}{t^2 + 1} dt = \frac{1}{2} \arctan(t) + C = \frac{1}{2} \arctan \left( \frac{x}{2} \right) + C \]
+            </div>
+        </div>
+    </div>
+
+
+    <div class="card">
+        <h3>Scheda C: Integrazione per Parti ( \(\int u dv = uv - \int v du\) )</h3>
+        <p>Decidi saggiamente chi è \(u\) (da derivare) e chi è \(dv\) (da integrare). Ricorda: <strong>Logaritmi</strong> e **Polinomi** spesso sono \(u\).</p>
+
+        <div class="exercise">
+            <p>1. \( \int x \ln(x) dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C1')">Mostra Soluzione 💡</button>
+            <div id="sol-C1" class="solution-box">
+                \( u = \ln x \Rightarrow du = \frac{1}{x} dx \). \( dv = x dx \Rightarrow v = \frac{x^2}{2} \). <br>
+                \[ \frac{x^2}{2} \ln x - \int \frac{x^2}{2} \cdot \frac{1}{x} dx = \frac{x^2}{2} \ln x - \frac{1}{2} \int x dx = \frac{x^2}{2} \ln x - \frac{x^2}{4} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>2. \( \int x^2 e^x dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C2')">Mostra Soluzione 💡</button>
+            <div id="sol-C2" class="solution-box">
+                \( u = x^2 \Rightarrow du = 2x dx \). \( dv = e^x dx \Rightarrow v = e^x \). (Doppia integrazione per parti) <br>
+                \[ x^2 e^x - \int 2x e^x dx = x^2 e^x - 2 [x e^x - e^x] + C = e^x (x^2 - 2x + 2) + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>3. \( \int \arctan(x) dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C3')">Mostra Soluzione 💡</button>
+            <div id="sol-C3" class="solution-box">
+                \( u = \arctan x \Rightarrow du = \frac{1}{1+x^2} dx \). \( dv = 1 dx \Rightarrow v = x \). <br>
+                \[ x \arctan x - \int \frac{x}{1+x^2} dx \]
+                (L'integrale residuo è una composta del tipo \(\int f'(x)/f(x) dx\)) <br>
+                \[ x \arctan x - \frac{1}{2} \ln(1+x^2) + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>4. \( \int x \sin(3x) dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C4')">Mostra Soluzione 💡</button>
+            <div id="sol-C4" class="solution-box">
+                \( u = x \Rightarrow du = dx \). \( dv = \sin(3x) dx \Rightarrow v = - \frac{1}{3} \cos(3x) \). <br>
+                \[ x \left( - \frac{1}{3} \cos(3x) \right) - \int \left( - \frac{1}{3} \cos(3x) \right) dx = - \frac{x}{3} \cos(3x) + \frac{1}{9} \sin(3x) + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>5. \( \int \frac{\ln x}{x^3} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C5')">Mostra Soluzione 💡</button>
+            <div id="sol-C5" class="solution-box">
+                \( u = \ln x \Rightarrow du = \frac{1}{x} dx \). \( dv = x^{-3} dx \Rightarrow v = \frac{x^{-2}}{-2} = - \frac{1}{2x^2} \). <br>
+                \[ \ln x \left( - \frac{1}{2x^2} \right) - \int \left( - \frac{1}{2x^2} \right) \frac{1}{x} dx = - \frac{\ln x}{2x^2} + \frac{1}{2} \int x^{-3} dx = - \frac{\ln x}{2x^2} - \frac{1}{4x^2} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>6. \( \int e^{2x} \sin x dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C6')">Mostra Soluzione 💡</button>
+            <div id="sol-C6" class="solution-box">
+                Integrale ciclico. Si applicano le parti due volte per poi risolvere per I. <br>
+                \( I = \frac{1}{5} e^{2x} (2 \sin x - \cos x) + C \)
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>7. \( \int \arcsin x dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C7')">Mostra Soluzione 💡</button>
+            <div id="sol-C7" class="solution-box">
+                \( u = \arcsin x \Rightarrow du = \frac{1}{\sqrt{1-x^2}} dx \). \( dv = 1 dx \Rightarrow v = x \). <br>
+                \[ x \arcsin x - \int \frac{x}{\sqrt{1-x^2}} dx \]
+                (L'integrale residuo è una composta) <br>
+                \[ x \arcsin x + \sqrt{1-x^2} + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>8. \( \int \frac{\ln(x+1)}{\sqrt{x+1}} dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C8')">Mostra Soluzione 💡</button>
+            <div id="sol-C8" class="solution-box">
+                Prima Sostituzione: \( t = x+1 \Rightarrow \int \frac{\ln t}{\sqrt{t}} dt \). <br>
+                Ora Per Parti: \( u = \ln t \), \( dv = t^{-1/2} dt \Rightarrow v = 2 \sqrt{t} \). <br>
+                \[ 2\sqrt{t} \ln t - 4 \sqrt{t} + C = 2 \sqrt{x+1} (\ln(x+1) - 2) + C \]
+            </div>
+        </div>
+        
+        <div class="exercise">
+            <p>9. \( \int x \sec^2 x dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C9')">Mostra Soluzione 💡</button>
+            <div id="sol-C9" class="solution-box">
+                \( u = x \Rightarrow du = dx \). \( dv = \sec^2 x dx \Rightarrow v = \tan x \). <br>
+                \[ x \tan x - \int \tan x dx = x \tan x - (-\ln|\cos x|) + C = x \tan x + \ln|\cos x| + C \]
+            </div>
+        </div>
+
+        <div class="exercise">
+            <p>10. \( \int (x^2 + 2x) \cos x dx \)</p>
+            <button class="toggle-button" onclick="showSolution('sol-C10')">Mostra Soluzione 💡</button>
+            <div id="sol-C10" class="solution-box">
+                \( u = x^2 + 2x \Rightarrow du = (2x+2) dx \). \( dv = \cos x dx \Rightarrow v = \sin x \). (Doppia integrazione per parti) <br>
+                Soluzione finale: \( (x^2+2x-2) \sin x + (2x+2) \cos x + C \)
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    // Inizializza MathJax
+    document.addEventListener('DOMContentLoaded', () => {
+        if (typeof MathJax !== 'undefined') {
+            MathJax.typeset();
+        }
+    });
+</script>
+</body>
+</html>
