@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GENESIS - Correzioni Interattive Antiderivate</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            color: #ffffff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 30px;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #00ffff;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .team-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .team-button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .team-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
+        }
+        
+        .team-red { background: linear-gradient(45deg, #ff4444, #cc0000); color: white; }
+        .team-blue { background: linear-gradient(45deg, #4444ff, #0000cc); color: white; }
+        .team-green { background: linear-gradient(45deg, #44ff44, #00cc00); color: black; }
+        .team-yellow { background: linear-gradient(45deg, #ffff44, #cccc00); color: black; }
+        
+        .correction-panel {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #000;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+        }
+        
+        .correction-panel.active {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .panel-header {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .red-header { background: linear-gradient(45deg, #ff4444, #cc0000); }
+        .blue-header { background: linear-gradient(45deg, #4444ff, #0000cc); }
+        .green-header { background: linear-gradient(45deg, #44ff44, #00cc00); color: black; }
+        .yellow-header { background: linear-gradient(45deg, #ffff44, #cccc00); color: black; }
+        
+        .exercise-section {
+            background: #f8f9fa;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .solution-hidden {
+            display: none;
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 5px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .solution-hidden.show {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .reveal-button {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .reveal-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        
+        .reveal-button:disabled {
+            background: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .formula-box {
+            background: #000;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            text-align: center;
+            border: 2px solid #00ff00;
+        }
+        
+        .step-by-step {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .verification-box {
+            background: #d1ecf1;
+            border-left: 4px solid #0dcaf0;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        th, td {
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .back-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 20px 0;
+        }
+        
+        .back-button:hover {
+            background: #5a6268;
+        }
+        
+        .progress-bar {
+            background: #e9ecef;
+            border-radius: 10px;
+            height: 30px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .team-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 PROGETTO GENESIS</h1>
+            <h2>Correzioni Interattive - Antiderivate</h2>
+            <p>Clicca sui pulsanti per rivelare progressivamente le soluzioni</p>
+        </div>
+        
+        <div class="team-selector">
+            <button class="team-button team-red" onclick="showCorrection('red')">
+                🔴 CORREZIONE SQUADRA ROSSA
+            </button>
+            <button class="team-button team-blue" onclick="showCorrection('blue')">
+                🔵 CORREZIONE SQUADRA BLU
+            </button>
+            <button class="team-button team-green" onclick="showCorrection('green')">
+                🟢 CORREZIONE SQUADRA VERDE
+            </button>
+            <button class="team-button team-yellow" onclick="showCorrection('yellow')">
+                🟡 CORREZIONE SQUADRA GIALLA
+            </button>
+        </div>
+        
+        <!-- CORREZIONE SQUADRA ROSSA -->
+        <div id="correction-red" class="correction-panel">
+            <div class="panel-header red-header">
+                <h2>🔴 CORREZIONE SQUADRA ROSSA</h2>
+                <h3>Antiderivate Polinomiali</h3>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress-red" class="progress-fill">0%</div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📊 FASE 1: Tabella delle Antiderivate</h3>
+                <p>Completiamo insieme la tabella fondamentale:</p>
+                
+                <button class="reveal-button" onclick="revealSolution('red-table', 'red')">
+                    👁️ Mostra Tabella Completa
+                </button>
+                
+                <div id="red-table" class="solution-hidden">
+                    <table>
+                        <tr>
+                            <th>Derivata f'(x)</th>
+                            <th>Funzione Originale f(x)</th>
+                            <th>Verifica</th>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = 1</td>
+                            <td>f(x) = x + C</td>
+                            <td>d/dx[x + C] = 1 ✓</td>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = x</td>
+                            <td>f(x) = x²/2 + C</td>
+                            <td>d/dx[x²/2] = 2x/2 = x ✓</td>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = x²</td>
+                            <td>f(x) = x³/3 + C</td>
+                            <td>d/dx[x³/3] = 3x²/3 = x² ✓</td>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = x³</td>
+                            <td>f(x) = x⁴/4 + C</td>
+                            <td>d/dx[x⁴/4] = 4x³/4 = x³ ✓</td>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = x⁴</td>
+                            <td>f(x) = x⁵/5 + C</td>
+                            <td>d/dx[x⁵/5] = 5x⁴/5 = x⁴ ✓</td>
+                        </tr>
+                        <tr>
+                            <td>f'(x) = x⁵</td>
+                            <td>f(x) = x⁶/6 + C</td>
+                            <td>d/dx[x⁶/6] = 6x⁵/6 = x⁵ ✓</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🔍 FASE 2: Scoperta del Pattern</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('red-pattern', 'red')">
+                    💡 Mostra Pattern Scoperto
+                </button>
+                
+                <div id="red-pattern" class="solution-hidden">
+                    <div class="step-by-step">
+                        <h4>Pattern Osservato:</h4>
+                        <p><strong>Per trovare l'antiderivata di x^n:</strong></p>
+                        <ol>
+                            <li>Aumenta l'esponente di 1: n → n+1</li>
+                            <li>Dividi per il nuovo esponente: /(n+1)</li>
+                            <li>Aggiungi sempre + C</li>
+                        </ol>
+                        <p><strong>Esempio:</strong> Se ho x³:</p>
+                        <ul>
+                            <li>Esponente: 3 → 4</li>
+                            <li>Divido: x⁴/4</li>
+                            <li>Risultato: x⁴/4 + C</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📐 FASE 3: La Regola Generale</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('red-formula', 'red')">
+                    🎯 Mostra Formula Generale
+                </button>
+                
+                <div id="red-formula" class="solution-hidden">
+                    <div class="formula-box">
+                        ∫ x^n dx = x^(n+1)/(n+1) + C<br>
+                        (per n ≠ -1)
+                    </div>
+                    
+                    <div class="verification-box">
+                        <h4>✅ Verifica della Formula:</h4>
+                        <p>Se ∫ x^n dx = x^(n+1)/(n+1) + C, allora:</p>
+                        <p>d/dx[x^(n+1)/(n+1) + C] = (n+1)·x^n/(n+1) = x^n ✓</p>
+                        <p><strong>La formula funziona!</strong></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎓 FASE 4: La Costante C</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('red-constant', 'red')">
+                    🔮 Mostra Spiegazione Costante C
+                </button>
+                
+                <div id="red-constant" class="solution-hidden">
+                    <div class="step-by-step">
+                        <h4>Perché aggiungiamo + C?</h4>
+                        <p><strong>Esempio:</strong> Le funzioni f(x) = x², g(x) = x² + 5, h(x) = x² - 3</p>
+                        <p>Tutte e tre hanno la stessa derivata: <strong>2x</strong></p>
+                        
+                        <p><strong>Conclusione:</strong></p>
+                        <ul>
+                            <li>Se so solo che f'(x) = 2x, ci sono <strong>infinite</strong> possibili funzioni f(x)</li>
+                            <li>Tutte hanno la forma f(x) = x² + C, dove C può essere qualsiasi numero</li>
+                            <li>C rappresenta una <strong>famiglia infinita di soluzioni</strong></li>
+                        </ul>
+                        
+                        <p><strong>Quando usiamo C?</strong> Negli <strong>integrali indefiniti</strong></p>
+                        <p><strong>Quando troviamo C?</strong> Usando una <strong>condizione iniziale</strong> (es: f(0) = 10)</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎯 PROBLEMI APPLICATIVI - Soluzioni</h3>
+                
+                <h4>Problema 1: Velocità e Posizione</h4>
+                <p>v(t) = 3t², s(0) = 10</p>
+                <button class="reveal-button" onclick="revealSolution('red-prob1', 'red')">
+                    🔍 Mostra Soluzione Problema 1
+                </button>
+                
+                <div id="red-prob1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Passo 1:</strong> Antiderivata generale</p>
+                        <p>s(t) = ∫ 3t² dt = 3 · t³/3 + C = t³ + C</p>
+                        
+                        <p><strong>Passo 2:</strong> Uso condizione iniziale s(0) = 10</p>
+                        <p>s(0) = 0³ + C = 10</p>
+                        <p>Quindi: C = 10</p>
+                        
+                        <p><strong>Passo 3:</strong> Soluzione finale</p>
+                        <div class="formula-box">
+                            s(t) = t³ + 10
+                        </div>
+                        
+                        <div class="verification-box">
+                            <strong>Verifica:</strong> d/dt[t³ + 10] = 3t² ✓
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 2: Accelerazione</h4>
+                <p>a(t) = 6t, v(0) = 2</p>
+                <button class="reveal-button" onclick="revealSolution('red-prob2', 'red')">
+                    🔍 Mostra Soluzione Problema 2
+                </button>
+                
+                <div id="red-prob2" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Soluzione:</strong></p>
+                        <p>v(t) = ∫ 6t dt = 6 · t²/2 + C = 3t² + C</p>
+                        <p>v(0) = 3·0² + C = 2 → C = 2</p>
+                        <div class="formula-box">
+                            v(t) = 3t² + 2
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 3: Crescita Energetica</h4>
+                <p>P(t) = 4t³, E(0) = 0</p>
+                <button class="reveal-button" onclick="revealSolution('red-prob3', 'red')">
+                    🔍 Mostra Soluzione Problema 3
+                </button>
+                
+                <div id="red-prob3" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Soluzione:</strong></p>
+                        <p>E(t) = ∫ 4t³ dt = 4 · t⁴/4 + C = t⁴ + C</p>
+                        <p>E(0) = 0⁴ + C = 0 → C = 0</p>
+                        <div class="formula-box">
+                            E(t) = t⁴
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 4: Sfida Avanzata</h4>
+                <p>f'(x) = 2x³ - 5x² + 3x - 1, f(1) = 0</p>
+                <button class="reveal-button" onclick="revealSolution('red-prob4', 'red')">
+                    🔍 Mostra Soluzione Problema 4
+                </button>
+                
+                <div id="red-prob4" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Soluzione:</strong></p>
+                        <p>f(x) = ∫ (2x³ - 5x² + 3x - 1) dx</p>
+                        <p>= 2·x⁴/4 - 5·x³/3 + 3·x²/2 - x + C</p>
+                        <p>= x⁴/2 - 5x³/3 + 3x²/2 - x + C</p>
+                        <p>f(1) = 1/2 - 5/3 + 3/2 - 1 + C = 0</p>
+                        <p>1/2 + 3/2 - 1 - 5/3 + C = 0</p>
+                        <p>2 - 1 - 5/3 + C = 0</p>
+                        <p>1 - 5/3 + C = 0</p>
+                        <p>-2/3 + C = 0 → C = 2/3</p>
+                        <div class="formula-box">
+                            f(x) = x⁴/2 - 5x³/3 + 3x²/2 - x + 2/3
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="hideCorrections()">⬅️ Torna alla Selezione</button>
+        </div>
+        
+        <!-- CORREZIONE SQUADRA BLU -->
+        <div id="correction-blue" class="correction-panel">
+            <div class="panel-header blue-header">
+                <h2>🔵 CORREZIONE SQUADRA BLU</h2>
+                <h3>Antiderivate Trigonometriche</h3>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress-blue" class="progress-fill">0%</div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🔍 FASE 1: Il Mistero del Segno</h3>
+                
+                <h4>Caso 1: Se f'(x) = cos(x)</h4>
+                <button class="reveal-button" onclick="revealSolution('blue-case1', 'blue')">
+                    👁️ Mostra Soluzione Caso 1
+                </button>
+                
+                <div id="blue-case1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Quale funzione ha derivata cos(x)?</strong></p>
+                        <p>Risposta: f(x) = <strong>sin(x) + C</strong></p>
+                        
+                        <p><strong>Verifica:</strong> d/dx[sin(x)] = cos(x) ✓</p>
+                        
+                        <div class="formula-box">
+                            ∫ cos(x) dx = sin(x) + C
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Caso 2: Se f'(x) = sin(x)</h4>
+                <button class="reveal-button" onclick="revealSolution('blue-case2', 'blue')">
+                    👁️ Mostra Soluzione Caso 2
+                </button>
+                
+                <div id="blue-case2" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Quale funzione ha derivata sin(x)?</strong></p>
+                        <p>Proviamo con cos(x): d/dx[cos(x)] = <strong>-sin(x)</strong> ❌</p>
+                        <p>Il segno è sbagliato!</p>
+                        
+                        <p><strong>Soluzione:</strong> Mettiamo un segno negativo davanti</p>
+                        <p>f(x) = <strong>-cos(x) + C</strong></p>
+                        
+                        <p><strong>Verifica:</strong> d/dx[-cos(x)] = -(-sin(x)) = sin(x) ✓</p>
+                        
+                        <div class="formula-box">
+                            ∫ sin(x) dx = -cos(x) + C
+                        </div>
+                        
+                        <p><strong>ATTENZIONE:</strong> Il segno negativo è fondamentale!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📐 FASE 2: Le Regole di Base</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('blue-rules', 'blue')">
+                    🎯 Mostra Regole Fondamentali
+                </button>
+                
+                <div id="blue-rules" class="solution-hidden">
+                    <div class="formula-box">
+                        ∫ sin(x) dx = -cos(x) + C<br><br>
+                        ∫ cos(x) dx = sin(x) + C
+                    </div>
+                    
+                    <div class="verification-box">
+                        <h4>Memo-trick per ricordare i segni:</h4>
+                        <ul>
+                            <li><strong>cos</strong> → <strong>sin</strong> (nessun segno negativo)</li>
+                            <li><strong>sin</strong> → <strong>-cos</strong> (compare il segno negativo)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📊 FASE 3: Funzioni Più Complesse</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('blue-table', 'blue')">
+                    👁️ Mostra Tabella Completa
+                </button>
+                
+                <div id="blue-table" class="solution-hidden">
+                    <table>
+                        <tr>
+                            <th>Derivata f'(x)</th>
+                            <th>Antiderivata ∫ f'(x) dx</th>
+                            <th>Verifica</th>
+                        </tr>
+                        <tr>
+                            <td>2sin(x)</td>
+                            <td>-2cos(x) + C</td>
+                            <td>d/dx[-2cos(x)] = 2sin(x) ✓</td>
+                        </tr>
+                        <tr>
+                            <td>3cos(x)</td>
+                            <td>3sin(x) + C</td>
+                            <td>d/dx[3sin(x)] = 3cos(x) ✓</td>
+                        </tr>
+                        <tr>
+                            <td>sin(x) + cos(x)</td>
+                            <td>-cos(x) + sin(x) + C</td>
+                            <td>d/dx[-cos(x) + sin(x)] = sin(x) + cos(x) ✓</td>
+                        </tr>
+                        <tr>
+                            <td>4sin(x) - 2cos(x)</td>
+                            <td>-4cos(x) - 2sin(x) + C</td>
+                            <td>d/dx[-4cos(x) - 2sin(x)] = 4sin(x) - 2cos(x) ✓</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎓 FASE 4: Proprietà di Linearità</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('blue-linearity', 'blue')">
+                    💡 Mostra Proprietà di Linearità
+                </button>
+                
+                <div id="blue-linearity" class="solution-hidden">
+                    <div class="step-by-step">
+                        <h4>Proprietà scoperta:</h4>
+                        <div class="formula-box">
+                            ∫ [a·f(x) + b·g(x)] dx = a·∫ f(x) dx + b·∫ g(x) dx
+                        </div>
+                        
+                        <p><strong>In parole semplici:</strong></p>
+                        <ul>
+                            <li>L'integrale di una <strong>somma</strong> è uguale alla <strong>somma degli integrali</strong></li>
+                            <li>L'integrale di una <strong>costante per una funzione</strong> è uguale alla <strong>costante per l'integrale della funzione</strong></li>
+                        </ul>
+                        
+                        <p><strong>Esempio:</strong></p>
+                        <p>∫ (3sin(x) + 2cos(x)) dx = 3∫sin(x)dx + 2∫cos(x)dx</p>
+                        <p>= 3(-cos(x)) + 2(sin(x)) + C</p>
+                        <p>= -3cos(x) + 2sin(x) + C</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎯 PROBLEMI APPLICATIVI - Soluzioni</h3>
+                
+                <h4>Problema 1: Oscillazioni Armoniche</h4>
+                <p>v(t) = -sin(t), x(0) = 1</p>
+                <button class="reveal-button" onclick="revealSolution('blue-prob1', 'blue')">
+                    🔍 Mostra Soluzione Problema 1
+                </button>
+                
+                <div id="blue-prob1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Passo 1:</strong> Antiderivata generale</p>
+                        <p>x(t) = ∫ -sin(t) dt = -(-cos(t)) + C = cos(t) + C</p>
+                        
+                        <p><strong>Passo 2:</strong> Condizione iniziale x(0) = 1</p>
+                        <p>x(0) = cos(0) + C = 1 + C = 1</p>
+                        <p>Quindi: C = 0</p>
+                        
+                        <p><strong>Passo 3:</strong> Soluzione</p>
+                        <div class="formula-box">
+                            x(t) = cos(t)
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="hideCorrections()">⬅️ Torna alla Selezione</button>
+        </div>
+        
+        <!-- CORREZIONE SQUADRA VERDE -->
+        <div id="correction-green" class="correction-panel">
+            <div class="panel-header green-header">
+                <h2>🟢 CORREZIONE SQUADRA VERDE</h2>
+                <h3>Antiderivate Esponenziali</h3>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress-green" class="progress-fill">0%</div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🔍 FASE 1: La Funzione Magica</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('green-magic', 'green')">
+                    👁️ Mostra la Funzione Speciale
+                </button>
+                
+                <div id="green-magic" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>La proprietà unica di e^x:</strong></p>
+                        <p>Se f'(x) = e^x, allora f(x) = <strong>e^x + C</strong></p>
+                        
+                        <p><strong>Verifica:</strong> d/dx[e^x + C] = e^x ✓</p>
+                        
+                        <div class="formula-box">
+                            ∫ e^x dx = e^x + C
+                        </div>
+                        
+                        <p><strong>Perché è speciale?</strong></p>
+                        <p>e^x è l'UNICA funzione che rimane identica sia derivando che integrando!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📐 FASE 2: Altre Basi</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('green-bases', 'green')">
+                    🎯 Mostra Regola per Altre Basi
+                </button>
+                
+                <div id="green-bases" class="solution-hidden">
+                    <table>
+                        <tr>
+                            <th>Funzione</th>
+                            <th>Derivata</th>
+                            <th>Quindi ∫ funzione dx</th>
+                        </tr>
+                        <tr>
+                            <td>2^x</td>
+                            <td>2^x · ln(2)</td>
+                            <td>2^x / ln(2) + C</td>
+                        </tr>
+                        <tr>
+                            <td>3^x</td>
+                            <td>3^x · ln(3)</td>
+                            <td>3^x / ln(3) + C</td>
+                        </tr>
+                        <tr>
+                            <td>10^x</td>
+                            <td>10^x · ln(10)</td>
+                            <td>10^x / ln(10) + C</td>
+                        </tr>
+                        <tr>
+                            <td>a^x</td>
+                            <td>a^x · ln(a)</td>
+                            <td>a^x / ln(a) + C</td>
+                        </tr>
+                    </table>
+                    
+                    <div class="verification-box">
+                        <h4>Verifica:</h4>
+                        <p>d/dx[a^x/ln(a)] = a^x·ln(a)/ln(a) = a^x ✓</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📊 FASE 3: La Regola Generale</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('green-general', 'green')">
+                    💡 Mostra Formula Generale
+                </button>
+                
+                <div id="green-general" class="solution-hidden">
+                    <div class="formula-box">
+                        ∫ a^x dx = a^x / ln(a) + C<br>
+                        (dove a > 0, a ≠ 1)
+                    </div>
+                    
+                    <div class="step-by-step">
+                        <p><strong>Caso speciale:</strong> Quando a = e</p>
+                        <p>∫ e^x dx = e^x / ln(e) + C = e^x / 1 + C = e^x + C</p>
+                        <p>Ecco perché e^x è così speciale!</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🧮 FASE 4: Funzioni Composte Base</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('green-ex1', 'green')">
+                    🔍 Soluzione Esercizio 1: ∫ 2e^x dx
+                </button>
+                
+                <div id="green-ex1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ 2e^x dx = 2 ∫ e^x dx = 2(e^x) + C = <strong>2e^x + C</strong></p>
+                        <p><strong>Verifica:</strong> d/dx[2e^x + C] = 2e^x ✓</p>
+                    </div>
+                </div>
+                
+                <button class="reveal-button" onclick="revealSolution('green-ex2', 'green')">
+                    🔍 Soluzione Esercizio 2: ∫ (e^x + 3) dx
+                </button>
+                
+                <div id="green-ex2" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ (e^x + 3) dx = ∫ e^x dx + ∫ 3 dx</p>
+                        <p>= e^x + 3x + C</p>
+                        <p><strong>Verifica:</strong> d/dx[e^x + 3x + C] = e^x + 3 ✓</p>
+                    </div>
+                </div>
+                
+                <button class="reveal-button" onclick="revealSolution('green-ex3', 'green')">
+                    🔍 Soluzione Esercizio 3: ∫ (5e^x - 2·3^x) dx
+                </button>
+                
+                <div id="green-ex3" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ (5e^x - 2·3^x) dx = 5∫e^x dx - 2∫3^x dx</p>
+                        <p>= 5e^x - 2·(3^x/ln(3)) + C</p>
+                        <div class="formula-box">
+                            = 5e^x - 2·3^x/ln(3) + C
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎯 PROBLEMI APPLICATIVI - Soluzioni</h3>
+                
+                <h4>Problema 1: Crescita Batterica</h4>
+                <p>r(t) = 2e^t, N(0) = 100</p>
+                <button class="reveal-button" onclick="revealSolution('green-prob1', 'green')">
+                    🔍 Mostra Soluzione Problema 1
+                </button>
+                
+                <div id="green-prob1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Passo 1:</strong> N(t) = ∫ 2e^t dt = 2e^t + C</p>
+                        <p><strong>Passo 2:</strong> N(0) = 2e^0 + C = 2 + C = 100</p>
+                        <p>Quindi: C = 98</p>
+                        <div class="formula-box">
+                            N(t) = 2e^t + 98
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 2: Decadimento Radioattivo</h4>
+                <p>v(t) = -e^(-t), N(0) = 1000</p>
+                <button class="reveal-button" onclick="revealSolution('green-prob2', 'green')">
+                    🔍 Mostra Soluzione Problema 2
+                </button>
+                
+                <div id="green-prob2" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>N(t) = ∫ -e^(-t) dt</p>
+                        <p>Nota: Questo richiede sostituzione (non ancora studiata)</p>
+                        <p>Risultato: N(t) = e^(-t) + C</p>
+                        <p>N(0) = e^0 + C = 1 + C = 1000</p>
+                        <p>C = 999</p>
+                        <div class="formula-box">
+                            N(t) = e^(-t) + 999
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="hideCorrections()">⬅️ Torna alla Selezione</button>
+        </div>
+        
+        <!-- CORREZIONE SQUADRA GIALLA -->
+        <div id="correction-yellow" class="correction-panel">
+            <div class="panel-header yellow-header">
+                <h2>🟡 CORREZIONE SQUADRA GIALLA</h2>
+                <h3>Antiderivate Speciali</h3>
+            </div>
+            
+            <div class="progress-bar">
+                <div id="progress-yellow" class="progress-fill">0%</div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🔍 FASE 1: Il Mistero di 1/x</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-mystery', 'yellow')">
+                    👁️ Mostra il Caso Speciale
+                </button>
+                
+                <div id="yellow-mystery" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Il problema:</strong></p>
+                        <p>∫ x^(-1) dx = ∫ 1/x dx = ?</p>
+                        <p>La regola x^(n+1)/(n+1) darebbe x^0/0 = INDEFINITO!</p>
+                        
+                        <p><strong>La soluzione:</strong></p>
+                        <p>Ricordiamo che d/dx[ln(x)] = 1/x per x > 0</p>
+                        <p>E d/dx[ln(-x)] = 1/x per x < 0</p>
+                        
+                        <div class="formula-box">
+                            ∫ 1/x dx = ln|x| + C<br>
+                            (per x ≠ 0)
+                        </div>
+                        
+                        <p><strong>Verifica:</strong></p>
+                        <ul>
+                            <li>Se x > 0: d/dx[ln(x)] = 1/x ✓</li>
+                            <li>Se x < 0: d/dx[ln(-x)] = -1/(-x) = 1/x ✓</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>📊 FASE 2: Potenze Frazionarie</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-fractions', 'yellow')">
+                    🎯 Mostra Tabella Completa
+                </button>
+                
+                <div id="yellow-fractions" class="solution-hidden">
+                    <table>
+                        <tr>
+                            <th>Funzione</th>
+                            <th>Come potenza</th>
+                            <th>Antiderivata</th>
+                        </tr>
+                        <tr>
+                            <td>√x</td>
+                            <td>x^(1/2)</td>
+                            <td>x^(3/2)/(3/2) = (2/3)x^(3/2) + C</td>
+                        </tr>
+                        <tr>
+                            <td>1/√x</td>
+                            <td>x^(-1/2)</td>
+                            <td>x^(1/2)/(1/2) = 2√x + C</td>
+                        </tr>
+                        <tr>
+                            <td>∛x</td>
+                            <td>x^(1/3)</td>
+                            <td>x^(4/3)/(4/3) = (3/4)x^(4/3) + C</td>
+                        </tr>
+                        <tr>
+                            <td>1/x²</td>
+                            <td>x^(-2)</td>
+                            <td>x^(-1)/(-1) = -1/x + C</td>
+                        </tr>
+                        <tr>
+                            <td>1/x³</td>
+                            <td>x^(-3)</td>
+                            <td>x^(-2)/(-2) = -1/(2x²) + C</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🧮 FASE 3: Esercizi di Applicazione</h3>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-ex1', 'yellow')">
+                    🔍 Soluzione: ∫ 2/x dx
+                </button>
+                
+                <div id="yellow-ex1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ 2/x dx = 2 ∫ 1/x dx = 2 ln|x| + C</p>
+                        <p><strong>Verifica:</strong> d/dx[2 ln|x|] = 2 · 1/x = 2/x ✓</p>
+                    </div>
+                </div>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-ex2', 'yellow')">
+                    🔍 Soluzione: ∫ 3√x dx
+                </button>
+                
+                <div id="yellow-ex2" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ 3√x dx = ∫ 3x^(1/2) dx</p>
+                        <p>= 3 · x^(3/2)/(3/2) + C</p>
+                        <p>= 3 · (2/3)x^(3/2) + C</p>
+                        <div class="formula-box">
+                            = 2x^(3/2) + C = 2x√x + C
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-ex3', 'yellow')">
+                    🔍 Soluzione: ∫ (2/x + x) dx
+                </button>
+                
+                <div id="yellow-ex3" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ (2/x + x) dx = ∫ 2/x dx + ∫ x dx</p>
+                        <p>= 2 ln|x| + x²/2 + C</p>
+                        <div class="formula-box">
+                            = 2 ln|x| + x²/2 + C
+                        </div>
+                    </div>
+                </div>
+                
+                <button class="reveal-button" onclick="revealSolution('yellow-ex4', 'yellow')">
+                    🔍 Soluzione: ∫ (4/x² - 1/√x) dx
+                </button>
+                
+                <div id="yellow-ex4" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>∫ (4x^(-2) - x^(-1/2)) dx</p>
+                        <p>= 4 · x^(-1)/(-1) - x^(1/2)/(1/2) + C</p>
+                        <p>= -4/x - 2√x + C</p>
+                        <div class="formula-box">
+                            = -4/x - 2√x + C
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="exercise-section">
+                <h3>🎯 PROBLEMI APPLICATIVI - Soluzioni</h3>
+                
+                <h4>Problema 1: Legge di Gravitazione</h4>
+                <p>F(r) = k/r², V(1) = 0</p>
+                <button class="reveal-button" onclick="revealSolution('yellow-prob1', 'yellow')">
+                    🔍 Mostra Soluzione Problema 1
+                </button>
+                
+                <div id="yellow-prob1" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>V(r) = ∫ k/r² dr = ∫ k·r^(-2) dr</p>
+                        <p>= k · r^(-1)/(-1) + C = -k/r + C</p>
+                        <p>V(1) = -k/1 + C = 0</p>
+                        <p>C = k</p>
+                        <div class="formula-box">
+                            V(r) = -k/r + k = k(1 - 1/r)
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 4: Funzione Mista</h4>
+                <p>f'(x) = 2x + 3/x + √x, f(1) = 5</p>
+                <button class="reveal-button" onclick="revealSolution('yellow-prob4', 'yellow')">
+                    🔍 Mostra Soluzione Problema 4
+                </button>
+                
+                <div id="yellow-prob4" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p>f(x) = ∫ (2x + 3/x + x^(1/2)) dx</p>
+                        <p>= x² + 3ln|x| + (2/3)x^(3/2) + C</p>
+                        <p>f(1) = 1 + 3·0 + 2/3 + C = 5</p>
+                        <p>1 + 0 + 2/3 + C = 5</p>
+                        <p>C = 5 - 1 - 2/3 = 10/3</p>
+                        <div class="formula-box">
+                            f(x) = x² + 3ln|x| + (2/3)x^(3/2) + 10/3
+                        </div>
+                    </div>
+                </div>
+                
+                <h4>Problema 5: Sfida Avanzata</h4>
+                <p>f'(x) = (x² + 1)/x, f(1) = 3</p>
+                <button class="reveal-button" onclick="revealSolution('yellow-prob5', 'yellow')">
+                    🔍 Mostra Soluzione Problema 5
+                </button>
+                
+                <div id="yellow-prob5" class="solution-hidden">
+                    <div class="step-by-step">
+                        <p><strong>Suggerimento:</strong> Dividi prima la frazione!</p>
+                        <p>(x² + 1)/x = x²/x + 1/x = x + 1/x</p>
+                        
+                        <p>f(x) = ∫ (x + 1/x) dx</p>
+                        <p>= ∫x dx + ∫(1/x) dx</p>
+                        <p>= x²/2 + ln|x| + C</p>
+                        
+                        <p>f(1) = 1/2 + ln(1) + C = 3</p>
+                        <p>1/2 + 0 + C = 3</p>
+                        <p>C = 5/2</p>
+                        
+                        <div class="formula-box">
+                            f(x) = x²/2 + ln|x| + 5/2
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="back-button" onclick="hideCorrections()">⬅️ Torna alla Selezione</button>
+        </div>
+        
+    </div>
+    
+    <script>
+        let progressCounters = {
+            red: 0,
+            blue: 0,
+            green: 0,
+            yellow: 0
+        };
+        
+        let totalSteps = {
+            red: 12,
+            blue: 10,
+            green: 11,
+            yellow: 11
+        };
+        
+        function showCorrection(team) {
+            // Nascondi tutti i pannelli
+            document.querySelectorAll('.correction-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Mostra il pannello selezionato
+            document.getElementById(`correction-${team}`).classList.add('active');
+            
+            // Nascondi il selettore
+            document.querySelector('.team-selector').style.display = 'none';
+            document.querySelector('.header').style.display = 'none';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function hideCorrections() {
+            // Nascondi tutti i pannelli
+            document.querySelectorAll('.correction-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            
+            // Mostra il selettore
+            document.querySelector('.team-selector').style.display = 'flex';
+            document.querySelector('.header').style.display = 'block';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function revealSolution(id, team) {
+            const element = document.getElementById(id);
+            const button = event.target;
+            
+            if (element && !element.classList.contains('show')) {
+                element.classList.add('show');
+                button.disabled = true;
+                button.textContent = '✅ Soluzione Rivelata';
+                button.style.background = '#cccccc';
+                
+                // Aggiorna il progresso
+                progressCounters[team]++;
+                updateProgress(team);
+                
+                // Smooth scroll all'elemento
+                setTimeout(() => {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+        
+        function updateProgress(team) {
+            const percentage = Math.round((progressCounters[team] / totalSteps[team]) * 100);
+            const progressBar = document.getElementById(`progress-${team}`);
+            
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+            
+            // Cambia colore in base alla percentuale
+            if (percentage === 100) {
+                progressBar.style.background = 'linear-gradient(45deg, #FFD700, #FFA500)';
+                
+                // Mostra messaggio di congratulazioni
+                setTimeout(() => {
+                    alert('🎉 COMPLIMENTI! Hai rivelato tutte le soluzioni di questa squadra!');
+                }, 500);
+            }
+        }
+        
+        // Aggiungi effetto hover ai pulsanti
+        document.addEventListener('DOMContentLoaded', function() {
+            const buttons = document.querySelectorAll('.reveal-button');
+            buttons.forEach(button => {
+                button.addEventListener('mouseenter', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(-2px) scale(1.02)';
+                    }
+                });
+                
+                button.addEventListener('mouseleave', function() {
+                    if (!this.disabled) {
+                        this.style.transform = 'translateY(0) scale(1)';
+                    }
+                });
+            });
+        });
+        
+        // Previeni accidentale chiusura della pagina durante la correzione
+        window.addEventListener('beforeunload', function(e) {
+            const anyPanelActive = document.querySelector('.correction-panel.active');
+            if (anyPanelActive) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+</body>
+</html>
